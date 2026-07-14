@@ -218,6 +218,81 @@ class CronRadar
     }
 
     /**
+     * Reconcile the complete set of monitors for a source in a single request.
+     * Extensions call this on boot and periodically to declare every discovered job
+     * (the authoritative set), so dead-man coverage exists before a job ever runs.
+     *
+     * @param array $monitors List of ['key' => ..., 'schedule' => ..., 'name' => ?, 'gracePeriod' => ?]
+     * @param string|null $source Source framework (e.g., "laravel"). Auto-detected if null.
+     * @param string|null $version Extension version reported to the server.
+     * @return void
+     */
+    public static function syncMonitors(
+        array $monitors,
+        ?string $source = null,
+        ?string $version = null
+    ): void {
+        try {
+            $payloadMonitors = [];
+            foreach ($monitors as $m) {
+                $key = $m['key'] ?? null;
+                $schedule = $m['schedule'] ?? null;
+                if (empty($key) || empty($schedule) || !Constants::isValidMonitorKey($key)) {
+                    continue;
+                }
+                $payloadMonitors[] = [
+                    'key' => $key,
+                    'name' => $m['name'] ?? self::generateReadableName($key),
+                    'schedule' => $schedule,
+                    'gracePeriod' => $m['gracePeriod'] ?? Constants::DEFAULT_GRACE_PERIOD_SECONDS,
+                ];
+            }
+
+            $apiKey = getenv(Constants::API_KEY_ENV_VAR) ?: '';
+            if (empty($apiKey)) {
+                $count = count($payloadMonitors);
+                error_log("[CronRadar] Warning: CRONRADAR_API_KEY environment variable not set. {$count} monitor(s) will not be synced.");
+                return;
+            }
+
+            $source = $source ?? self::detectSource();
+
+            $syncRequest = [
+                'source' => $source,
+                'version' => $version ?? '0.1.0',
+                'mode' => 'reconcile',
+                'monitors' => $payloadMonitors,
+            ];
+
+            $url = Constants::BASE_URL . '/api/sync';
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($syncRequest));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Basic ' . base64_encode($apiKey . ':')
+            ]);
+            curl_setopt($ch, CURLOPT_TIMEOUT, Constants::DEFAULT_TIMEOUT_SECONDS);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $count = count($payloadMonitors);
+            if ($httpCode >= 200 && $httpCode < 300) {
+                error_log("[CronRadar] Reconciled {$count} monitor(s) for source '{$source}'.");
+            } else {
+                error_log("[CronRadar] Failed to reconcile monitors for source '{$source}': HTTP {$httpCode}");
+            }
+        } catch (\Throwable $e) {
+            error_log("[CronRadar] Error reconciling monitors: {$e->getMessage()}");
+            // Never throw - protect user's application
+        }
+    }
+
+    /**
      * Send ping internally
      *
      * @param string $monitorKey
