@@ -7,10 +7,10 @@ For Laravel scheduler auto-discovery, install the `cronradar/laravel` extension 
 ## Install
 
 ```bash
-composer require cronradar/cronradar
+composer require cronradar/php
 ```
 
-PHP 8.1+ supported.
+PHP 8.0+ supported.
 
 ## Setup
 
@@ -259,7 +259,7 @@ If `CRONRADAR_API_KEY` is unset entirely, the SDK no-ops every call without logg
 - **Documentation:** [docs.cronradar.com](https://docs.cronradar.com)
 - **Agent-friendly index:** [docs.cronradar.com/llms.txt](https://docs.cronradar.com/llms.txt)
 - **OpenAPI spec:** [api.cronradar.com/swagger/v1/swagger.json](https://api.cronradar.com/swagger/v1/swagger.json)
-- **Packagist:** [packagist.org/packages/cronradar/cronradar](https://packagist.org/packages/cronradar/cronradar)
+- **Packagist:** [packagist.org/packages/cronradar/php](https://packagist.org/packages/cronradar/php)
 - **GitHub:** [github.com/cronradar/cronradar-php](https://github.com/cronradar/cronradar-php)
 - **Laravel extension:** [packagist.org/packages/cronradar/laravel](https://packagist.org/packages/cronradar/laravel)
 - **Support:** support@cronradar.com
