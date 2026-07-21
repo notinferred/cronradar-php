@@ -11,15 +11,25 @@ use PHPUnit\Framework\TestCase;
 class CronRadarTest extends TestCase
 {
     private $originalApiKey;
+    private $originalErrorLog;
+    private $errorLogFile;
 
     protected function setUp(): void
     {
         $this->originalApiKey = getenv('CRONRADAR_API_KEY');
         putenv('CRONRADAR_API_KEY=test-api-key-123');
+        $this->originalErrorLog = ini_get('error_log');
+        $this->errorLogFile = tempnam(sys_get_temp_dir(), 'cronradar-tests-');
+        ini_set('error_log', $this->errorLogFile);
     }
 
     protected function tearDown(): void
     {
+        ini_set('error_log', $this->originalErrorLog);
+        if ($this->errorLogFile !== false && file_exists($this->errorLogFile)) {
+            unlink($this->errorLogFile);
+        }
+
         if ($this->originalApiKey !== false) {
             putenv("CRONRADAR_API_KEY={$this->originalApiKey}");
         } else {
