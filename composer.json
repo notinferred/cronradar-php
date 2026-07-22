@@ -1,12 +1,13 @@
 {
     "name": "cronradar/php",
-    "description": "Dead-simple cron job monitoring with auto-registration. One primary function: monitor(). Advanced: sync(). Self-healing monitors.",
-    "keywords": ["cron", "monitoring", "scheduler", "job", "task", "ping", "sync", "auto-register"],
+    "description": "Non-blocking lifecycle and heartbeat monitoring for PHP cron jobs, with missed-run, failure, and stuck-run detection.",
+    "keywords": ["cron", "monitoring", "scheduled-jobs", "recurring-jobs", "missed-jobs", "failed-jobs", "stuck-jobs", "heartbeat"],
+    "homepage": "https://cronradar.com/php",
     "license": "proprietary",
     "authors": [
         {
-            "name": "Administrator",
-            "email": "contact@cronradar.com"
+            "name": "CronRadar",
+            "email": "support@cronradar.com"
         }
     ],
     "require": {

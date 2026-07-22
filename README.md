@@ -276,7 +276,8 @@ For Laravel scheduler jobs, use `->monitorAs('existing-key')` until the discover
 
 ## Links
 
-- **Documentation:** [docs.cronradar.com](https://docs.cronradar.com)
+- **Documentation:** [docs.cronradar.com/integrations/php](https://docs.cronradar.com/integrations/php)
+- **Monitoring overview:** [cronradar.com/php](https://cronradar.com/php)
 - **Agent-friendly index:** [docs.cronradar.com/llms.txt](https://docs.cronradar.com/llms.txt)
 - **OpenAPI spec:** [docs.cronradar.com/openapi.json](https://docs.cronradar.com/openapi.json)
 - **Packagist:** [packagist.org/packages/cronradar/php](https://packagist.org/packages/cronradar/php)
