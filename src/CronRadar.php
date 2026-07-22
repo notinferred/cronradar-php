@@ -190,7 +190,7 @@ class CronRadar
                 ]
             ];
 
-            $url = Constants::BASE_URL . '/api/sync';
+            $url = Constants::BASE_URL . '/api/v1/sync';
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -264,7 +264,7 @@ class CronRadar
                 'monitors' => $payloadMonitors,
             ];
 
-            $url = Constants::BASE_URL . '/api/sync';
+            $url = Constants::BASE_URL . '/api/v1/sync';
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -302,8 +302,8 @@ class CronRadar
     private static function sendPingInternal(string $monitorKey, string $apiKey): ?array
     {
         try {
-            // URL-based auth: /ping/{monitorKey}/{apiKey}
-            $url = Constants::BASE_URL . '/ping/' . urlencode($monitorKey) . '/' . urlencode($apiKey);
+            // URL-based auth: /api/v1/ping/{monitorKey}/{apiKey}
+            $url = Constants::BASE_URL . '/api/v1/ping/' . urlencode($monitorKey) . '/' . urlencode($apiKey);
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -338,8 +338,8 @@ class CronRadar
         ?string $message = null
     ): void {
         try {
-            // URL-based auth: /ping/{monitorKey}/{apiKey}/{endpoint}
-            $url = Constants::BASE_URL . '/ping/' . urlencode($monitorKey) . '/' . urlencode($apiKey) . '/' . $endpoint;
+            // URL-based auth: /api/v1/ping/{monitorKey}/{apiKey}/{endpoint}
+            $url = Constants::BASE_URL . '/api/v1/ping/' . urlencode($monitorKey) . '/' . urlencode($apiKey) . '/' . $endpoint;
 
             // Add query parameters
             $params = [];
