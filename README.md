@@ -287,4 +287,4 @@ For Laravel scheduler jobs, use `->monitorAs('existing-key')` until the discover
 
 ## License
 
-© 2026 [CronRadar](https://cronradar.com) · Proprietary — see [LICENSE](./LICENSE).
+© 2026 [CronRadar](https://cronradar.com) · MIT — see [LICENSE](./LICENSE).
