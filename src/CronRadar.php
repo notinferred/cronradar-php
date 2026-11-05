@@ -204,7 +204,6 @@ class CronRadar
 
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
 
             if ($httpCode >= 200 && $httpCode < 300) {
                 error_log("[CronRadar] Monitor '{$monitorKey}' synced successfully.");
@@ -278,7 +277,6 @@ class CronRadar
 
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
 
             $count = count($payloadMonitors);
             if ($httpCode >= 200 && $httpCode < 300) {
@@ -312,7 +310,6 @@ class CronRadar
 
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
 
             return ['status' => $httpCode, 'body' => $response];
         } catch (\Throwable $e) {
@@ -360,7 +357,6 @@ class CronRadar
             curl_setopt($ch, CURLOPT_TIMEOUT, Constants::DEFAULT_TIMEOUT_SECONDS);
 
             curl_exec($ch);
-            curl_close($ch);
         } catch (\Throwable $e) {
             // Silently fail to protect job execution
         }
