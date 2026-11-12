@@ -38,6 +38,30 @@ class CronRadarTest extends TestCase
     }
 
     /**
+     * Keys are limited to 100 UTF-16 code units, like the server, and longer keys are logged.
+     */
+    public function testMonitorKeyLimitIs100Utf16CodeUnits(): void
+    {
+        $this->assertTrue(\CronRadar\Constants::isValidMonitorKey(str_repeat('k', 100)));
+        $this->assertFalse(\CronRadar\Constants::isValidMonitorKey(str_repeat('k', 101)));
+        $this->assertStringContainsString(
+            'length 101 exceeds maximum of 100',
+            file_get_contents($this->errorLogFile)
+        );
+    }
+
+    /**
+     * Non-ASCII keys count UTF-16 code units, not bytes: an emoji is two units and an accented letter one.
+     */
+    public function testMonitorKeyLengthCountsNonAsciiInUtf16CodeUnits(): void
+    {
+        $this->assertSame(2, \CronRadar\Constants::utf16Length("\u{1F680}"));
+        $this->assertTrue(\CronRadar\Constants::isValidMonitorKey(str_repeat("\u{1F680}", 50)));
+        $this->assertFalse(\CronRadar\Constants::isValidMonitorKey(str_repeat("\u{1F680}", 51)));
+        $this->assertTrue(\CronRadar\Constants::isValidMonitorKey(str_repeat("\u{00E9}", 100)));
+    }
+
+    /**
      * Test that monitor() does not throw when API key is missing
      */
     public function testMonitorDoesNotThrowWhenApiKeyMissing(): void
